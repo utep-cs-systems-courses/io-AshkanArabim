@@ -13,7 +13,7 @@ all: led-c.elf led-s.elf
 #additional rules for files
 led-c.elf: ${COMMON_OBJECTS} greenControl-c.o
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ ../lib/libTimer.a
-led-s.elf: ${COMMON_OBJECTS} greenControl-s.o
+led-s.elf: ${COMMON_OBJECTS} greenControl-s.o oncePerSecond-s.o
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ ../lib/libTimer.a
 
 load-c: led-c.elf
