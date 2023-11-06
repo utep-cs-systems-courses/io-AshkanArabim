@@ -3,7 +3,7 @@
 
 #define LED_RED BIT0               // P1.0
 #define LED_GREEN BIT6             // P1.6
-#define LEDS (BIT0 | BIT6)
+#define LEDS (LED_RED | LED_GREEN)
 
 #define SW1 BIT3		/* switch1 is p1.3 */
 #define SWITCHES SW1		/* only 1 switch on this board */
@@ -67,14 +67,14 @@ __interrupt_vec(PORT1_VECTOR) Port_1(){
 void
 __interrupt_vec(WDT_VECTOR) WDT()	/* 250 interrupts/sec */
 {
-  static int sec_count = 0;
-  switch (sec_count) { 
+  static int blink_count = 0;
+  switch (blink_count) { 
   case 6: 
-    sec_count = 0;
+    blink_count = 0;
     P1OUT |= LED_RED;
     break;
   default:
-    sec_count ++;
-    if (!buttonDown) P1OUT &= ~LED_RED;
+    blink_count ++;
+    if (!buttonDown) P1OUT &= ~LED_RED; /* don't blink off if button is down */
   }
 } 
