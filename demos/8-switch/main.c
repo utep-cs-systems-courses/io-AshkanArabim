@@ -19,6 +19,8 @@ void main(void)
   P1IE |= SWITCHES;		/* enable interrupts from switches */
   P1OUT |= SWITCHES;		/* pull-ups for switches */
   P1DIR &= ~SWITCHES;		/* set switches' bits for input */
+  P1IES |= SWITCHES; // always rising edge
+  // remember: you don't set equal; you |=
 
   or_sr(0x18);  // CPU off, GIE on
 } 
@@ -29,16 +31,29 @@ switch_interrupt_handler()
   char p1val = P1IN;		/* switch is in P1 */
 
 /* update switch interrupt sense to detect changes from current buttons */
-  P1IES |= (p1val & SWITCHES);	/* if switch up, sense down */
-  P1IES &= (p1val | ~SWITCHES);	/* if switch down, sense up */
+  // P1IES |= (p1val & SWITCHES);	/* if switch up, sense down */
+  // P1IES &= (p1val | ~SWITCHES);	/* if switch down, sense up */
 
 /* up=red, down=green */
-  if (p1val & SW1) {
-    P1OUT |= LED_RED;
+  // if (p1val & SW1) {
+  //   P1OUT |= LED_RED;
+  //   P1OUT &= ~LED_GREEN;
+  // } else {
+  //   P1OUT |= LED_GREEN;
+  //   P1OUT &= ~LED_RED;
+  // }
+
+  // DEBUG
+  // P1OUT |= LED_RED;
+
+
+  // if led green on, turn off, turn red on
+  if (P1OUT & LED_GREEN) {
     P1OUT &= ~LED_GREEN;
-  } else {
-    P1OUT |= LED_GREEN;
+    P1OUT |= LED_RED;
+  } else { // otherwise, red off, green on
     P1OUT &= ~LED_RED;
+    P1OUT |= LED_GREEN;
   }
 }
 
