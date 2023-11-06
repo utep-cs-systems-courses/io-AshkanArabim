@@ -17,6 +17,17 @@ blink.elf: ${COMMON_OBJECTS} blinkMain.o stateMachines.o led.o wdInterruptHandle
 load: blink.elf
 	msp430loader.sh blink.elf
 
+# vv assembly stuff
+blink_s.elf: ${COMMON_OBJECTS} blinkMain.o stateMachines.o led_s.o wdInterruptHandler.o ../lib/libTimer.a
+	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
+
+load_s: blink.elf
+	msp430loader.sh blink_s.elf
+
+led_s.o: led_s.s
+	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
+# ^^ assembly stuff
+
 clean:
 	rm -f *.o *.elf
 
